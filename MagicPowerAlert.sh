@@ -54,7 +54,6 @@ do
 done
 
 len=${#messages[@]}
-echo $len
 if (( "$len" > 0 )); then
 
         if [[ -z $MESSAGE ]]; then
