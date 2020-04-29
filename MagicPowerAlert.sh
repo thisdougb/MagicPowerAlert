@@ -3,9 +3,7 @@
 # 1. Save locally, chmod +x <file>
 #
 # 2. Add a cron entry to run it, for example:
-#   30 9 * * * /Users/dougb/dev/scripts/MagicMousePower.sh
-#
-# (OSX asks permission to run this the first time)
+#   30 9 * * * /Users/dougb/MagicPower/MagicMousePower.sh
 #
 
 # You can change the threshold
