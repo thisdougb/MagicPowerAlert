@@ -7,7 +7,7 @@
 #
 
 # You can change the threshold
-THRESHOLD=25
+THRESHOLD=20
 
 # You can change the message, if coffee is not your thing
 MESSAGE="Get a coffee and charge:\n"
