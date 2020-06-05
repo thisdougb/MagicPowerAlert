@@ -77,3 +77,11 @@ Of course you can delete the cron entry, or simply comment it out.
 # switched off
 #30 9 * * * /Users/dougb/dev/scripts/MagicMousePower.sh
 ```
+
+# MagicPowerMonitor
+Convenient battery level and charging status utility for your Apple Mac with Bluetooth devices.
+```
+$ ./MagicPowerMonitor.sh
+Magic Keyboard with Numeric Keypad at 98%
+Magic Mouse 2 at 47% (charging)
+```
