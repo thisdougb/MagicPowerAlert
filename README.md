@@ -69,11 +69,11 @@ The time and date fields are:
 Add an entry similar to this, but with your path and time preferences.
 This runs every morning at 09:30:
 ```
-30 9 * * * /Users/dougb/dev/scripts/MagicMousePower.sh
+30 9 * * * /Users/dougb/dev/scripts/MagicPowerAlert.sh
 ```
 #### Switch Off
 Of course you can delete the cron entry, or simply comment it out.
 ```
 # switched off
-#30 9 * * * /Users/dougb/dev/scripts/MagicMousePower.sh
+#30 9 * * * /Users/dougb/dev/scripts/MagicPowerAlert.sh
 ```
