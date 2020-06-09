@@ -7,6 +7,9 @@ IOREG=$(/usr/sbin/ioreg -r -a -k BatteryPercent 2>/dev/null)
 NUM_DEVICES=$(/usr/bin/xmllint --xpath "
                 count(//plist/array/dict)" - 2>/dev/null <<< "$IOREG")
 
+# Exit here if no devices found
+[[ $NUM_DEVICES == '' ]] && exit
+
 # Build an array of their device names
 declare -a DEVICES
 for device_num in $(seq 1 "$NUM_DEVICES"); do
