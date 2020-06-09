@@ -12,26 +12,33 @@ THRESHOLD=20
 # You can change the message, if coffee is not your thing
 MESSAGE="Get a coffee and charge:\n"
 
-# Gather the first 5 device names which report a 'BatteryPercent'
+# Change nothing below here
+messages=()
+
+# Gather XML data about devices reporting a 'BatteryPercent'
+IOREG=$(/usr/sbin/ioreg -r -a -k BatteryPercent 2>/dev/null)
+
+# Count how many devices we found
+NUM_DEVICES=$(/usr/bin/xmllint --xpath "
+                count(//plist/array/dict)" - 2>/dev/null <<< "$IOREG")
+
+# Build an array of their device names
 declare -a DEVICES
-for findmagicitem in 1 2 3 4 5; do
-    if name=$(/usr/sbin/ioreg -r -a -k BatteryPercent | /usr/bin/xmllint --xpath "
+for device_num in $(seq 1 "$NUM_DEVICES"); do
+    if name=$(/usr/bin/xmllint --xpath "
                 /plist/
                 array/
-                    dict[$findmagicitem]/
+                    dict[$device_num]/
                     key[.='Product']/
                         following-sibling::*[1]/
-                        text()" - 2>/dev/null); then
+                        text()" - 2>/dev/null <<< "$IOREG"); then
             DEVICES+=("$name")
     fi
 done
 
-# Change nothing below here
-messages=()
-
 for index in ${!DEVICES[*]}; do
     device=${DEVICES[$index]}
-    powerValue=$(/usr/sbin/ioreg -r -a -k BatteryPercent 2>&1 | /usr/bin/xmllint --xpath "
+    powerValue=$(/usr/bin/xmllint --xpath "
                     /plist/
                       array/
                         dict/
@@ -40,7 +47,7 @@ for index in ${!DEVICES[*]}; do
                           ../
                             key[.='BatteryPercent']/
                               following-sibling::*[1]/
-                                text()" - 2>/dev/null)
+                                text()" - 2>/dev/null <<< "$IOREG")
     int_re='^[0-9]+$'
     if [[ $powerValue =~ $int_re ]] ; then
         if [[ $powerValue -le $THRESHOLD ]]; then
