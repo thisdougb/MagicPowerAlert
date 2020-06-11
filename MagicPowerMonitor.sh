@@ -1,22 +1,32 @@
 #!/usr/bin/env bash
 #
-# Gather the first 5 device names which report a 'BatteryPercent'
+# Gather XML data about devices reporting a 'BatteryPercent'
+IOREG=$(/usr/sbin/ioreg -r -a -k BatteryPercent 2>/dev/null)
+
+# Count how many devices we found
+NUM_DEVICES=$(/usr/bin/xmllint --xpath "
+                count(//plist/array/dict)" - 2>/dev/null <<< "$IOREG")
+
+# Exit here if no devices found
+[[ $NUM_DEVICES == '' ]] && exit
+
+# Build an array of their device names
 declare -a DEVICES
-for findmagicitem in 1 2 3 4 5; do
-    if name=$(/usr/sbin/ioreg -r -a -k BatteryPercent | /usr/bin/xmllint --xpath "
+for device_num in $(seq 1 "$NUM_DEVICES"); do
+    if name=$(/usr/bin/xmllint --xpath "
                 /plist/
                 array/
-                    dict[$findmagicitem]/
+                    dict[$device_num]/
                     key[.='Product']/
                         following-sibling::*[1]/
-                        text()" - 2>/dev/null); then
+                        text()" - 2>/dev/null <<< "$IOREG"); then
             DEVICES+=("$name")
     fi
 done
 
 for index in ${!DEVICES[*]}; do
     device=${DEVICES[$index]}
-    powerValue=$(/usr/sbin/ioreg -r -a -k BatteryPercent 2>&1 | /usr/bin/xmllint --xpath "
+    powerValue=$(/usr/bin/xmllint --xpath "
                     /plist/
                       array/
                         dict/
@@ -25,8 +35,8 @@ for index in ${!DEVICES[*]}; do
                           ../
                             key[.='BatteryPercent']/
                               following-sibling::*[1]/
-                                text()" - 2>/dev/null)
-    statusFlag=$(/usr/sbin/ioreg -r -a -k BatteryPercent 2>&1 | /usr/bin/xmllint --xpath "
+                                text()" - 2>/dev/null <<< "$IOREG")
+    statusFlag=$(/usr/bin/xmllint --xpath "
                     /plist/
                       array/
                         dict/
@@ -35,7 +45,7 @@ for index in ${!DEVICES[*]}; do
                           ../
                             key[.='BatteryStatusFlags']/
                               following-sibling::*[1]/
-                                text()" - 2>/dev/null)
+                                text()" - 2>/dev/null <<< "$IOREG")
     if [[ $statusFlag == 3 ]]; then
         status=" (charging)"
     else
