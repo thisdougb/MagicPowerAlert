@@ -38,7 +38,7 @@ Give it a quick test, set the alert THRESHOLD to 100 by supplying as an argument
 A window prompt should pop-up, with your alert.
 ```
 $ chmod +x MagicPowerAlert.sh
-$ ./MagicPowerAlert 100
+$ ./MagicPowerAlert.sh 100
 ```
 
 #### View Battery and Charging Status (without the popup alert)
