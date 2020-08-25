@@ -6,8 +6,17 @@
 #   30 9 * * * /Users/dougb/MagicPower/MagicPowerAlert.sh
 #
 
-# You can change the threshold
-THRESHOLD=20
+# You can change the threshold by passing an argument to the script
+THRESHOLD="${1:-'20'}"
+# Strip a percent sign in case the user supplied one
+THRESHOLD="${THRESHOLD/\%/}"
+
+if [[ "$THRESHOLD" -lt 1 ]] || [[ "$THRESHOLD" -gt 99 ]]; then
+    echo "[!] Alert threshold must be between 1% and 99%" >&2
+    exit 1
+fi
+[[ "$THRESHOLD" -lt 20 ]] && echo "[!] Consider raising the alert threshold to above 20%" >&2
+[[ "$THRESHOLD" -gt 50 ]] && echo "[!] Consider reducing the alert threshold to below 50%" >&2
 
 # You can change the message, if coffee is not your thing
 MESSAGE="Get a coffee and charge:\n"
