@@ -10,7 +10,7 @@
 # the first argument to the script
 getStatus="false"
 
-# You can change the threshold by passing a value as the first argument to the script
+# You can change the default threshold by passing a value as the first argument to the script
 THRESHOLD="${1:-20}"
 
 # Strip a percent sign in case the user supplied one
@@ -21,10 +21,6 @@ if [[ "$THRESHOLD" == "status" ]]; then
 elif [[ "$THRESHOLD" -lt 1 ]] || [[ "$THRESHOLD" -gt 100 ]]; then
     echo "[!] Alert threshold must be between 1% and 100%" >&2
     exit 1
-elif [[ "$THRESHOLD" -lt 20 ]]; then
-    echo "[!] Consider raising the alert threshold to above 20%" >&2
-elif [[ "$THRESHOLD" -gt 50 ]]; then
-    echo "[!] Consider reducing the alert threshold to below 50%" >&2
 fi
 
 # You can change the message, if coffee is not your thing
