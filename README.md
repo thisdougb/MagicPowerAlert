@@ -26,24 +26,27 @@ But you can change this is you like.
 $ head MagicPowerAlert.sh
 #!/usr/bin/env bash
 
-# You can change the threshold
+# You can change the default threshold of 20% by supplying an argument to the script
 THRESHOLD=20
 
-# You can change the message, if coffee is not your thing
+# You can change the message here, if coffee is not your thing
 MESSAGE="Get a coffee and charge:\n"
-
-# Probably best leave this as is
-DEVICES=("Magic Mouse 2" "Magic Keyboard")
 ```
 
 #### Test
-Give it a quick test, though if your devices are fully charged then set THRESHOLD to 100.
+Give it a quick test, set the alert THRESHOLD to 100 by supplying as an argument.
 A window prompt should pop-up, with your alert.
 ```
 $ chmod +x MagicPowerAlert.sh
-$ ./MagicPowerAlert
+$ ./MagicPowerAlert 100
 ```
-Reset THRESHOLD.
+
+#### View Battery and Charging Status (without the popup alert)
+```
+$ ./MagicPowerAlert.sh status
+Magic Keyboard with Numeric Keypad at 98%
+Magic Mouse 2 at 47% (charging)
+```
 
 #### Schedule It
 If you haven't used cron before, then the relevant info (from 'man 5 cron') is:
@@ -78,10 +81,3 @@ Of course you can delete the cron entry, or simply comment it out.
 #30 9 * * * /Users/dougb/dev/scripts/MagicPowerAlert.sh
 ```
 
-# MagicPowerMonitor
-Convenient battery level and charging status utility for your Apple Mac with Bluetooth devices.
-```
-$ ./MagicPowerMonitor.sh
-Magic Keyboard with Numeric Keypad at 98%
-Magic Mouse 2 at 47% (charging)
-```
