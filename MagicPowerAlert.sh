@@ -6,8 +6,22 @@
 #   30 9 * * * /Users/dougb/MagicPower/MagicPowerAlert.sh
 #
 
-# You can change the threshold
-THRESHOLD=20
+# You can monitor the battery levels and charging status by passing 'status' as
+# the first argument to the script
+getStatus="false"
+
+# You can change the default threshold by passing a value as the first argument to the script
+THRESHOLD="${1:-20}"
+
+# Strip a percent sign in case the user supplied one
+THRESHOLD="${THRESHOLD/\%/}"
+
+if [[ "$THRESHOLD" == "status" ]]; then
+    getStatus="true"
+elif [[ "$THRESHOLD" -lt 1 ]] || [[ "$THRESHOLD" -gt 100 ]]; then
+    echo "[!] Alert threshold must be between 1% and 100%" >&2
+    exit 1
+fi
 
 # You can change the message, if coffee is not your thing
 MESSAGE="Get a coffee and charge:\n"
@@ -51,8 +65,26 @@ for index in ${!DEVICES[*]}; do
                             key[.='BatteryPercent']/
                               following-sibling::*[1]/
                                 text()" - 2>/dev/null <<< "$IOREG")
+    statusFlag=$(/usr/bin/xmllint --xpath "
+                    /plist/
+                      array/
+                        dict/
+                          key[.='Product']/
+                            following-sibling::*[1][text()=\"$device\"]/
+                          ../
+                            key[.='BatteryStatusFlags']/
+                              following-sibling::*[1]/
+                                text()" - 2>/dev/null <<< "$IOREG")
+    if [[ $statusFlag == 3 ]]; then
+        status=" (charging)"
+    else
+        status=""
+    fi
     int_re='^[0-9]+$'
     if [[ $powerValue =~ $int_re ]] ; then
+        if [[ $getStatus == "true" ]]; then
+            messages[$index]="$device at $powerValue%$status"
+        fi
         if [[ $powerValue -le $THRESHOLD ]]; then
             messages[$index]="$device at $powerValue%"
         fi
@@ -68,14 +100,19 @@ if (( "$len" > 0 )); then
             message=$MESSAGE
     fi
 
-    for index in ${!messages[*]}; do
-        message="$message\n\t${messages[$index]}"
-    done
-
-    /usr/bin/osascript -e "
-        tell application \"System Events\"
-            activate
-            display alert \"$message\"
-        end tell
-    " >/dev/null 2>&1
+    if [[ $getStatus == "true" ]]; then
+        for index in ${!messages[*]}; do
+            echo "${messages[$index]}"
+        done
+    else
+        for index in ${!messages[*]}; do
+            message="$message\n\t${messages[$index]}"
+        done
+        /usr/bin/osascript -e "
+            tell application \"System Events\"
+                activate
+                display alert \"$message\"
+            end tell
+        " >/dev/null 2>&1
+    fi
 fi
