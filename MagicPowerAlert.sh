@@ -35,7 +35,7 @@ messages=()
 # Crude but simple logger to file.
 function logger() {
     if [[ $LOGFILE -eq 1 ]]; then
-        echo "$(date) $1" >> ${BASH_SOURCE[0]}.log
+        echo "$(date) $1" >> "${BASH_SOURCE[0]}.log"
     fi
 }
 
@@ -59,8 +59,8 @@ inactivity=$(/usr/bin/xmllint --xpath "
                       key[.='HIDIdleTime']/
                       following-sibling::*[1]/
                         text()" - 2>/dev/null <<< "$IOREG_IDLE")
-INACTIVITY_SECONDS=$(( $inactivity / 1000000000 ))
-INACTIVITY_MINUTES=$(( $INACTIVITY_SECONDS / 60 ))
+INACTIVITY_SECONDS=$(( inactivity / 1000000000 ))
+INACTIVITY_MINUTES=$(( INACTIVITY_SECONDS / 60 ))
 
 if [[ $INACTIVITY_MINUTES -ge $INACTIVITY_THRESHOLD_MINS && $getStatus != "true" ]]; then
     logger "skip because of inactivity for $INACTIVITY_MINUTES m [threshold is $INACTIVITY_THRESHOLD_MINS m]"
@@ -77,7 +77,7 @@ if [[ -f $muteAlertsFileName && $getStatus != "true" ]]; then
 
     if [[ $fileAgeInHours -ge $MUTE_CONSECUTIVE_ALERTS_HOURS ]]; then
         logger "removing file $muteAlertsFileName"
-        rm $muteAlertsFileName
+        rm "$muteAlertsFileName"
     fi
 
     if [[ $fileAgeInHours -lt $MUTE_CONSECUTIVE_ALERTS_HOURS ]]; then
@@ -170,7 +170,7 @@ if (( "$len" > 0 )); then
 
         # osascript is blocking, so create mute file here to signal subsequent runs to skip
         # consecutive alerts.
-        touch $muteAlertsFileName
+        touch "$muteAlertsFileName"
         logger "created file $muteAlertsFileName"
 
         # Interestingly, this osascript process only last for about 60s. even when it is still
