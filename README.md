@@ -1,6 +1,10 @@
 # MagicPowerAlert
 Convenient low-battery notification for your Apple Mac with Bluetooth devices.
 
+<p align="center">
+  <img src="https://github.com/thisdougb/thisdougb.github.io/blob/master/images/MagicPowerAlert.png" />
+</p>
+
 Mac OS warns your Magic Mouse is running out of power at 2%. Not ideal given the charging port location.
 MagicPowerAlert lets you know at 20%, giving you lots of time to fit in a charging session at a time of your choosing.
 
