@@ -21,7 +21,7 @@ $ ./MagicPowerAlert.sh status
 Magic Keyboard with Numeric Keypad at 98%
 Magic Mouse 2 at 47% (charging)
 ```
-##### Configure
+#### Configure
 The default should be fine, it'll pick up either mouse or keyboard below 20% power.
 But you can change this is you like.
 
