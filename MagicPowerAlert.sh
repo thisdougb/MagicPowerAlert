@@ -27,7 +27,7 @@ INACTIVITY_THRESHOLD_MINS=5
 MESSAGE="Get a coffee and charge:\n"
 
 # set to 1, creates a log file for debugging. Log file is ./MagicPowerAlert.sh.log
-LOGFILE=1
+LOGFILE=0
 
 # Change nothing below here
 messages=()
