@@ -8,8 +8,7 @@
 # 3. Or, run frequently but set the muting and inactivity vars
 #   */30 * * * * /Users/dougb/MagicPower/MagicPowerAlert.sh
 #
-#   MUTE_CONSECUTIVE_ALERTS_HOURS=4
-#   INACTIVITY_THRESHOLD_MINS=5
+VERSION="v1.1.0" # unused, but for info
 
 # You can change the default (20) threshold by passing a value as the first argument to the script
 THRESHOLD="${1:-20}"
