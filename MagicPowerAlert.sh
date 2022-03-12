@@ -25,11 +25,26 @@ INACTIVITY_THRESHOLD_MINS=5
 # You can change the message, if coffee is not your thing
 MESSAGE="Get a coffee and charge:\n"
 
+# You can change the time the alert shows
+DIALOG_TIMEOUT=60
+
+# You can pick an appropriate icon colour if you have SpaceGray devices
+SPACE_GRAY=0
+
 # set to 1, creates a log file for debugging. Log file is ./MagicPowerAlert.sh.log
 LOGFILE=0
 
 # Change nothing below here
 messages=()
+
+MOUSE_LIGHT="/Library/Application Support/Apple/BezelServices/AppleHSBluetooth.plugin/Contents/Resources/Mouse.icns"
+MOUSE_DARK="/Library/Application Support/Apple/BezelServices/AppleHSBluetooth.plugin/Contents/Resources/MouseSpaceGray.icns"
+if [[ $SPACE_GRAY -eq 1 ]]; then
+    MOUSE_ICON="$MOUSE_DARK"
+else
+    MOUSE_ICON="$MOUSE_LIGHT"
+fi
+[[ ! -f "$MOUSE_ICON" ]] && echo "No mouse icons found :<" && exit 1
 
 # Crude but simple logger to file.
 function logger() {
@@ -163,7 +178,7 @@ if (( "$len" > 0 )); then
         done
     else
         for index in ${!messages[*]}; do
-            message="$message\n\t${messages[$index]}"
+            message="$message\n${messages[$index]}"
             logger "alerting with ${messages[$index]}"
         done
 
@@ -178,7 +193,10 @@ if (( "$len" > 0 )); then
         /usr/bin/osascript -e "
             tell application \"System Events\"
                 activate
-                display alert \"$message\"
+                display dialog \"$message\" with title \"MagicPowerAlert\" ¬
+                    buttons \"OK\" default button \"OK\" ¬
+                    with icon POSIX file \"$MOUSE_ICON\" ¬
+                    giving up after \"$DIALOG_TIMEOUT\"
             end tell
         " >/dev/null 2>&1
     fi
