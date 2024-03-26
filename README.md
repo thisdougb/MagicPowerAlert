@@ -1,6 +1,6 @@
 # MagicPowerAlert
 <p align="center">
-  <img src="https://github.com/thisdougb/thisdougb.github.io/blob/master/images/MagicPowerAlert.png" />
+  <img src="https://github.com/thisdougb/MagicPowerAlert/blob/master/example.jpeg" />
 </p>
 
 Convenient low-battery notification for your Apple Mac with Bluetooth devices.
